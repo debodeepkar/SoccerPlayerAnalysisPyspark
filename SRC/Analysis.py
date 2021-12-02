@@ -1,18 +1,19 @@
+# We must import pyspark-sql for the analysis
 from pyspark.sql import *
-import seaborn as sns
 import matplotlib.pyplot as plt
-spark = SparkSession.builder.appName("test").getOrCreate()
+
+# Here we are creating a Spark Session, Spark context is already present inside it so no need for that explicitly
+spark = SparkSession.builder.appName("Analysis Project").getOrCreate()
+
+# Here we read the data and store it in 'df'
 df = spark.read.csv('players.csv', header=True)
 
-print("1. Load the csv file and show top 5 records from it.")
+# Here we create a temporary SQL view from the data to work with
 df.createOrReplaceTempView("soccer")
+
+print("1. Load the csv file and show top 5 records from it.")
+
 spark.sql("select * from soccer").show(5)
-
-
-
-#df.createOrReplaceTempView("soccer") // Creates a temporary View for implementing SPARK SQL
-
-
 
 print("2. How you would be able to see each column's name.")
 
@@ -30,9 +31,13 @@ print("4. Show number of players and their countries.")
 
 spark.sql("select  nationality, count(nationality) as number_of_players from soccer group by nationality order by number_of_players desc").show()
 
+
+
 print("5. If you find many records in point 4 then show only top 10 countries and their number of players.")
 
 spark.sql("select  nationality, count(nationality) as number_of_players from soccer group by nationality order by number_of_players desc").show(10)
+
+
 
 print("6. Now you have to create a bar plot of top 5 countries and their number of players, try to fill green color in bars.")
 
@@ -50,15 +55,22 @@ for bar in bar1:
     plt.text(bar.get_x()+0.05,y_val+0.05,y_val)
 plt.show()
 
+
+
+
 print("7. Show top 5 players short name and wages.")
 
 spark.sql("select short_name, value_eur, wage_eur from soccer order by int(value_eur) desc ").show(5)
 
 
 
+
 print("8. Show top 5 players short name and wages that are getting highest salaries")
 
 spark.sql("select short_name, value_eur, wage_eur from soccer order by int(wage_eur) desc ").show(5)
+
+
+
 
 
 print("9. Create a bar plot of point number 8.")
@@ -77,12 +89,19 @@ plt.title("Top 5 Earning Players")
 bars = plt.bar(x_ax_1, y_ax_1, color='indigo')
 for bar in bars:
     y_val=bar.get_height()
-    plt.text(bar.get_x()+0.25,y_val+0.5,y_val)
+    plt.text(bar.get_x()+0.25,y_val+20,y_val)
 plt.show()
+
+
+
+
 
 print("10.Show top 10 records of Germany.")
 
 spark.sql("select * from soccer where nationality = 'Germany'").show(10)
+
+
+
 
 
 print("11.Now show top 5 records of Germany players who have maximum height, weight and wages.")
@@ -94,25 +113,46 @@ print("Wages")
 spark.sql("select * from soccer where nationality = 'Germany' order by int(wage_eur) desc").show(5)
 
 
+
+
+
 print("12.Show short name and wages of top 5 Germany players.")
 
 spark.sql(" select short_name, int(wage_eur), value_eur from soccer where nationality= 'Germany' order by int(wage_eur) DESC").show(5)
+
+
+
 
 print("13.Show top 5 players who have great shooting skills among all with short name.")
 
 spark.sql("select short_name, shooting from soccer order by int(shooting) DESC ").show(5)
 
+
+
+
 print("14.Show top 5 players records (short name, defending, nationality, and club) that have awesome defending skills.")
 
 spark.sql("select short_name, defending, nationality, club from soccer order by int(defending) DESC").show(5)
+
+
+
+
 
 print("15.Show wages records of top 5 players of 'Real Madrid' team.")
 
 spark.sql("select long_name, wage_eur from soccer where club='Real Madrid' order by int(wage_eur) DESC").show(5)
 
+
+
+
+
 print("16.Show shooting records of top 5 players of 'Real Madrid' team.")
 
 spark.sql("select long_name, shooting from soccer where club='Real Madrid' order by int(wage_eur) DESC").show(5)
+
+
+
+
 
 print("17.Show defending records of top 5 players of 'Real Madrid' team.")
 
