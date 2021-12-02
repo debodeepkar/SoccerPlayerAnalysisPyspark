@@ -136,7 +136,7 @@ spark.sql("select short_name, defending, nationality, club from soccer order by 
 
 
 
-
+# from here onwards the player with highest salary is the better player
 
 print("15.Show wages records of top 5 players of 'Real Madrid' team.")
 
@@ -157,3 +157,8 @@ spark.sql("select long_name, shooting from soccer where club='Real Madrid' order
 print("17.Show defending records of top 5 players of 'Real Madrid' team.")
 
 spark.sql("select long_name, defending from soccer where club='Real Madrid' order by int(wage_eur) DESC").show(5)
+
+
+print("18.Show nationality records of top 5 players of 'Real Madrid' team.")
+
+spark.sql("select long_name, nationality from soccer where club='Real Madrid' order by int(wage_eur) DESC").show(5)
