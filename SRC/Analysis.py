@@ -38,13 +38,16 @@ print("6. Now you have to create a bar plot of top 5 countries and their number 
 
 df6 = spark.sql("select  nationality, count(nationality) as number_of_players from soccer group by nationality order by number_of_players desc").toPandas()
 df6.set_index('nationality')
-fig = plt.figure()
+plt.figure(figsize=(10,10))
 x_ax=df6['nationality'].head(5)
 y_ax=df6["number_of_players"].head(5)
 plt.xlabel("Countries")
 plt.ylabel("Number of Players")
 plt.title("Top 5 Countries and their Number of Players")
-plt.bar(x_ax, y_ax, color='green')
+bar1=plt.bar(x_ax, y_ax, color='green', width=0.4)
+for bar in bar1:
+    y_val=bar.get_height()
+    plt.text(bar.get_x()+0.05,y_val+0.05,y_val)
 plt.show()
 
 print("7. Show top 5 players short name and wages.")
@@ -66,8 +69,17 @@ df9['short_name']=df9['short_name'].astype(str)
 df9['wage_eur']=df9['wage_eur'].astype(int)
 x_ax_1= df9['short_name'].head(5)
 y_ax_1= df9['wage_eur'].head(5)
-plt.bar(x_ax_1, y_ax_1, color='indigo')
+plt.figure(figsize=(10,10))
+plt.xticks(rotation =20)
+plt.xlabel("PLAYERS")
+plt.ylabel("WAGES")
+plt.title("Top 5 Earning Players")
+bars = plt.bar(x_ax_1, y_ax_1, color='indigo')
+for bar in bars:
+    y_val=bar.get_height()
+    plt.text(bar.get_x()+0.25,y_val+0.5,y_val)
 plt.show()
+
 print("10.Show top 10 records of Germany.")
 
 spark.sql("select * from soccer where nationality = 'Germany'").show(10)
