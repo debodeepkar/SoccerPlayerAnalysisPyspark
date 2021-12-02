@@ -59,6 +59,15 @@ spark.sql("select short_name, value_eur, wage_eur from soccer order by int(wage_
 
 
 print("9. Create a bar plot of point number 8.")
+
+df9 =spark.sql("select short_name, value_eur, wage_eur from soccer order by int(wage_eur) desc ").toPandas()
+print(df9.dtypes)
+df9['short_name']=df9['short_name'].astype(str)
+df9['wage_eur']=df9['wage_eur'].astype(int)
+x_ax_1= df9['short_name'].head(5)
+y_ax_1= df9['wage_eur'].head(5)
+plt.bar(x_ax_1, y_ax_1, color='indigo')
+plt.show()
 print("10.Show top 10 records of Germany.")
 
 spark.sql("select * from soccer where nationality = 'Germany'").show(10)
